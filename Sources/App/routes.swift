@@ -5,7 +5,7 @@ func routes(_ app: Application) throws {
 
     // /movies GET
     app.get("movies") { req in
-        Movie.query(on: req.db).all()
+        Movie.query(on: req.db).with(\.$reviews).all()
     }
 
     // /movies/id
@@ -40,5 +40,11 @@ func routes(_ app: Application) throws {
             .flatMap {
                 $0.delete(on: req.db)
         }.transform(to: .ok)
+    }
+
+    // Reviews
+    app.post("reviews") { req -> EventLoopFuture<Review> in
+        let review = try req.content.decode(Review.self)
+        return review.create(on: req.db).map { review }
     }
 }
