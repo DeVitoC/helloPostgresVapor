@@ -19,6 +19,9 @@ final class Movie: Model, Content {
     @Field(key: "title")
     var title: String
 
+    @Children(for: \.$movie) // hasMany relationship - has many reviews
+    var reviews: [Review]
+
     init() {}
 
     init(id: UUID? = nil, title: String) {
